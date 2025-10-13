@@ -42,6 +42,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .navigationTitle("FDA Recalls")
             .toolbar {
                 ToolbarItem {
                     Button(action: refreshData) {
