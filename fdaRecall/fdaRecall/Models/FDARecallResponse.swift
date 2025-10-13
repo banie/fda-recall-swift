@@ -3,7 +3,7 @@ import Foundation
 // MARK: - FDA Recall Response
 struct FDARecallResponse: Codable {
     let meta: Meta
-    let results: [RecallResult]
+    let results: [FdaRecall]
 }
 
 // MARK: - Meta
@@ -28,8 +28,8 @@ struct MetaResults: Codable {
     let total: Int
 }
 
-// MARK: - Recall Result
-struct RecallResult: Codable {
+// MARK: - FdaRecall
+struct FdaRecall: Codable {
     let status: String?
     let city: String?
     let state: String?
