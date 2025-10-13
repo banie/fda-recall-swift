@@ -24,8 +24,9 @@ struct fdaRecallApp: App {
     }()
 
     var body: some Scene {
+        let repository = FdaRecallsRepositoryImpl(modelContext: sharedModelContainer.mainContext)
         WindowGroup {
-            ContentView()
+            ContentView(repository: repository)
         }
         .modelContainer(sharedModelContainer)
     }

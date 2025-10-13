@@ -10,8 +10,13 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+
     @Query private var items: [Item]
-    @StateObject var viewModel = FdaRecallsViewModel()
+    @StateObject private var viewModel: FdaRecallsViewModel
+
+    init(repository: FdaRecallsRepository) {
+        _viewModel = StateObject(wrappedValue: FdaRecallsViewModel(repository: repository))
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -38,7 +43,7 @@ struct ContentView: View {
         } detail: {
             Text("Select an item")
         }
-        .onAppear() {
+        .onAppear {
             viewModel.refresh()
         }
     }
@@ -60,6 +65,9 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+    let container = try! ModelContainer(for: Item.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+    let repository = FdaRecallsRepositoryImpl(modelContext: container.mainContext)
+
+    return ContentView(repository: repository)
+        .modelContainer(container)
 }

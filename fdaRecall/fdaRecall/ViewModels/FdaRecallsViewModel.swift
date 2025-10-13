@@ -8,23 +8,24 @@
 import Foundation
 import Combine
 
+@MainActor
 class FdaRecallsViewModel: ObservableObject {
-    @Published var recalls: [FdaRecall] = []
+    @Published var isLoading = false
+    
+    private let repository: FdaRecallsRepository
+    
+    init(repository: FdaRecallsRepository) {
+        self.repository = repository
+    }
     
     func refresh() {
+        isLoading = true
         Task {
-            guard let session = HttpSession(apiKey: "", fullUrlPath: "https://api.fda.gov/food/enforcement.json") else {
-                print("Failed to create session")
-                return
-            }
-
-            switch await session.get() as Result<FDARecallResponse, DataError> {
-            case .success(let response):
-                await MainActor.run {
-                    self.recalls = response.results
-                    print("recalls: \(self.recalls)")
-                }
+            switch await repository.fetch(page: 0) {
+            case .success:
+                isLoading = false
             case .failure(let error):
+                isLoading = false
                 print("Error: \(error)")
             }
         }
