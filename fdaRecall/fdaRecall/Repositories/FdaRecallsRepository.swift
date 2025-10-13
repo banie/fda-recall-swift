@@ -26,10 +26,16 @@ class FdaRecallsRepositoryImpl: FdaRecallsRepository {
         let limit = 20
         let skip = page * limit
         let getFdaRecalls = GetFdaRecallsImpl(httpSession: httpSession)
+        
         switch await getFdaRecalls.fetch(skip: skip, limit: limit) {
         case .success(let fdaRecalls):
             for fdaRecall in fdaRecalls {
                 modelContext.insert(FdaRecallData(from: fdaRecall))
+            }
+            do {
+                try modelContext.save()
+            } catch {
+                print("Error saving context: \(error)")
             }
             return .success(())
         case .failure(let error):

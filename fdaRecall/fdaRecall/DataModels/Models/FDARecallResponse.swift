@@ -30,6 +30,7 @@ struct MetaResults: Codable {
 
 // MARK: - FdaRecall
 struct FdaRecall: Codable {
+    let recallNumber: String
     let status: String?
     let city: String?
     let state: String?
@@ -45,7 +46,6 @@ struct FdaRecall: Codable {
     let voluntaryMandated: String?
     let initialFirmNotification: String?
     let distributionPattern: String?
-    let recallNumber: String?
     let productDescription: String?
     let productQuantity: String?
     let reasonForRecall: String?

@@ -10,6 +10,7 @@ import SwiftData
 
 @Model
 class FdaRecallData {
+    @Attribute(.unique) var recallNumber: String
     var status: String?
     var city: String?
     var state: String?
@@ -24,7 +25,6 @@ class FdaRecallData {
     var voluntaryMandated: String?
     var initialFirmNotification: String?
     var distributionPattern: String?
-    var recallNumber: String?
     var productDescription: String?
     var productQuantity: String?
     var reasonForRecall: String?
@@ -35,7 +35,8 @@ class FdaRecallData {
     var codeInfo: String?
     var moreCodeInfo: String?
     
-    init(status: String? = nil,
+    init(recallNumber: String,
+         status: String? = nil,
          city: String? = nil,
          state: String? = nil,
          country: String? = nil,
@@ -49,7 +50,6 @@ class FdaRecallData {
          voluntaryMandated: String? = nil,
          initialFirmNotification: String? = nil,
          distributionPattern: String? = nil,
-         recallNumber: String? = nil,
          productDescription: String? = nil,
          productQuantity: String? = nil,
          reasonForRecall: String? = nil,
@@ -59,6 +59,7 @@ class FdaRecallData {
          reportDate: String? = nil,
          codeInfo: String? = nil,
          moreCodeInfo: String? = nil) {
+        self.recallNumber = recallNumber
         self.status = status
         self.city = city
         self.state = state
@@ -73,7 +74,6 @@ class FdaRecallData {
         self.voluntaryMandated = voluntaryMandated
         self.initialFirmNotification = initialFirmNotification
         self.distributionPattern = distributionPattern
-        self.recallNumber = recallNumber
         self.productDescription = productDescription
         self.productQuantity = productQuantity
         self.reasonForRecall = reasonForRecall
@@ -88,6 +88,7 @@ class FdaRecallData {
     // Convenience initializer from FdaRecall struct
     convenience init(from fdaRecall: FdaRecall) {
         self.init(
+            recallNumber: fdaRecall.recallNumber,
             status: fdaRecall.status,
             city: fdaRecall.city,
             state: fdaRecall.state,
@@ -102,7 +103,6 @@ class FdaRecallData {
             voluntaryMandated: fdaRecall.voluntaryMandated,
             initialFirmNotification: fdaRecall.initialFirmNotification,
             distributionPattern: fdaRecall.distributionPattern,
-            recallNumber: fdaRecall.recallNumber,
             productDescription: fdaRecall.productDescription,
             productQuantity: fdaRecall.productQuantity,
             reasonForRecall: fdaRecall.reasonForRecall,
