@@ -11,8 +11,8 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
 
-    @Query private var items: [Item]
     @StateObject private var viewModel: FdaRecallsViewModel
+    @Query(sort: \FdaRecallData.recallInitiationDate, order: .reverse) private var fdaRecalls: [FdaRecallData]
 
     init(repository: FdaRecallsRepository) {
         _viewModel = StateObject(wrappedValue: FdaRecallsViewModel(repository: repository))
@@ -21,51 +21,51 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             List {
-                ForEach(items) { item in
+                ForEach(fdaRecalls) { recall in
                     NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                        RecallDetailView(recall: recall)
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(recall.displayTitle)
+                                .font(.headline)
+                                .lineLimit(2)
+                            
+                            Text(recall.displaySubtitle)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            Text(recall.formattedRecallDate)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 2)
                     }
                 }
-                .onDelete(perform: deleteItems)
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
                 ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                    Button(action: refreshData) {
+                        Label("Refresh", systemImage: "arrow.clockwise")
                     }
                 }
             }
         } detail: {
-            Text("Select an item")
+            Text("Select a recall")
         }
         .onAppear {
             viewModel.refresh()
         }
     }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
+    private func refreshData() {
+        viewModel.refresh()
     }
 }
 
+
+
 #Preview {
-    let container = try! ModelContainer(for: Item.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+    let container = try! ModelContainer(for: FdaRecallData.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
     let repository = FdaRecallsRepositoryImpl(modelContext: container.mainContext)
 
     return ContentView(repository: repository)

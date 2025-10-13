@@ -24,6 +24,8 @@ class GetFdaRecallsImpl: GetFdaRecalls {
         if let limit = limit {
             parameters["limit"] = limit
         }
+        // Sort by recall initiation date in descending order (most recent first)
+        parameters["sort"] = "recall_initiation_date:desc"
         
         switch await httpSession.get(parameters: parameters) as Result<FDARecallResponse, DataError> {
         case .success(let response):
