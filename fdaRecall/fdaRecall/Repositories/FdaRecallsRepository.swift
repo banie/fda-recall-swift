@@ -28,7 +28,9 @@ class FdaRecallsRepositoryImpl: FdaRecallsRepository {
         let getFdaRecalls = GetFdaRecallsImpl(httpSession: httpSession)
         switch await getFdaRecalls.fetch(skip: skip, limit: limit) {
         case .success(let fdaRecalls):
-            print("fdaRecalls: \(fdaRecalls)")
+            for fdaRecall in fdaRecalls {
+                modelContext.insert(FdaRecallData(from: fdaRecall))
+            }
             return .success(())
         case .failure(let error):
             print("Error: \(error)")
