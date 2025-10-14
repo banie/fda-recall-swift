@@ -41,6 +41,10 @@ struct ContentView: View {
                                 .foregroundColor(.secondary)
                             
                             Text(recall.formattedRecallDate)
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                            
+                            Text("Classification: \(recall.classification ?? "Not available")")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
