@@ -40,6 +40,22 @@ struct ContentView: View {
                         }
                         .padding(.vertical, 2)
                     }
+                    .onAppear {
+                        // Load more when we're near the end of the list
+                        if recall == fdaRecalls.last && viewModel.hasMoreData {
+                            viewModel.loadMore(from: fdaRecalls.count)
+                        }
+                    }
+                }
+                
+                // Loading indicator for pagination
+                if viewModel.isLoadingMore {
+                    HStack {
+                        Spacer()
+                        ProgressView("Loading more...")
+                            .padding()
+                        Spacer()
+                    }
                 }
             }
             .navigationTitle("FDA Recalls")
