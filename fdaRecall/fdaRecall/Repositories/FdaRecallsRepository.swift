@@ -5,7 +5,9 @@
 //  Created by banie setijoso on 2025-10-13.
 //
 
+import Foundation
 import SwiftData
+import os.log
 
 protocol FdaRecallsRepository {
     var fetchLimit: Int { get }
@@ -20,6 +22,10 @@ struct FdaRecallsPage {
 class FdaRecallsRepositoryImpl: FdaRecallsRepository {
     let fetchLimit = 20
     private let modelContext: ModelContext
+    private let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "com.banie",
+        category: "network"
+    )
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
@@ -42,14 +48,14 @@ class FdaRecallsRepositoryImpl: FdaRecallsRepository {
             do {
                 try modelContext.save()
             } catch {
-                print("Error saving context: \(error)")
+                logger.error("Error saving context: \(error)")
+                return .failure(.urlIsInvalid)
             }
             
             // Determine if there's more data based on the number of items returned
             let hasMoreData = fdaRecalls.count == fetchLimit
             return .success(FdaRecallsPage(hasMoreData: hasMoreData, currentPage: page))
         case .failure(let error):
-            print("Error: \(error)")
             return .failure(error)
         }
     }

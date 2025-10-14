@@ -11,4 +11,5 @@ enum DataError: Error {
     case httpError(status: HTTPStatusCode, errorMessage: String)
     case parsingError(errorMessage: String, dataInString: String)
     case sessionError(errorMessage: String)
+    case savingError
 }

@@ -21,6 +21,12 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             List {
+                if let errorText = viewModel.errorStatus {
+                    Text(errorText)
+                        .font(.callout)
+                        .foregroundColor(.red)
+                        .frame(maxWidth: .infinity)
+                }
                 ForEach(fdaRecalls) { recall in
                     NavigationLink {
                         RecallDetailView(recall: recall)
