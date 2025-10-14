@@ -48,34 +48,25 @@ struct ContentView: View {
                     }
                 }
                 
-                // Loading indicator for pagination
-                if viewModel.isLoadingMore {
+                // Loading indicator for refresh or pagination
+                if viewModel.isLoading || viewModel.isLoadingMore {
                     HStack {
                         Spacer()
-                        ProgressView("Loading more...")
+                        ProgressView("Loading...")
                             .padding()
                         Spacer()
                     }
                 }
             }
             .navigationTitle("FDA Recalls")
-            .toolbar {
-                ToolbarItem {
-                    Button(action: refreshData) {
-                        Label("Refresh", systemImage: "arrow.clockwise")
-                    }
-                }
-            }
         } detail: {
             Text("Select a recall")
         }
         .onAppear {
-            viewModel.refresh()
+            if fdaRecalls.isEmpty {
+                viewModel.refresh()
+            }
         }
-    }
-
-    private func refreshData() {
-        viewModel.refresh()
     }
 }
 
