@@ -21,14 +21,14 @@ struct FdaRecallsPage {
 
 class FdaRecallsRepositoryImpl: FdaRecallsRepository {
     let fetchLimit = 20
-    private let modelContext: ModelContext
+    private let modelContainer: ModelContainer
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "com.banie",
         category: "network"
     )
     
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
+    init(modelContainer: ModelContainer) {
+        self.modelContainer = modelContainer
     }
     
     func fetch(page: Int = 0) async -> Result<FdaRecallsPage, DataError> {
@@ -38,15 +38,16 @@ class FdaRecallsRepositoryImpl: FdaRecallsRepository {
         
         let skip = page * fetchLimit
         let getFdaRecalls = GetFdaRecallsImpl(httpSession: httpSession)
+        let backgroundContext = ModelContext(modelContainer)
         
         switch await getFdaRecalls.fetch(skip: skip, limit: fetchLimit) {
         case .success(let fdaRecalls):
             for fdaRecall in fdaRecalls {
-                modelContext.insert(FdaRecallData(from: fdaRecall))
+                backgroundContext.insert(FdaRecallData(from: fdaRecall))
             }
             
             do {
-                try modelContext.save()
+                try backgroundContext.save()
             } catch {
                 logger.error("Error saving context: \(error)")
                 return .failure(.urlIsInvalid)

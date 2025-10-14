@@ -84,7 +84,7 @@ struct ContentView: View {
 
 #Preview {
     let container = try! ModelContainer(for: FdaRecallData.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
-    let repository = FdaRecallsRepositoryImpl(modelContext: container.mainContext)
+    let repository = FdaRecallsRepositoryImpl(modelContainer: container)
 
     return ContentView(repository: repository)
         .modelContainer(container)

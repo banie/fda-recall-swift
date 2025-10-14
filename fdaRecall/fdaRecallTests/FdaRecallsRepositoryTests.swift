@@ -21,8 +21,8 @@ import SwiftData
             for: FdaRecallData.self,
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
-        modelContext = container.mainContext
-        sut = FdaRecallsRepositoryImpl(modelContext: modelContext)
+        modelContext = ModelContext(container)
+        sut = FdaRecallsRepositoryImpl(modelContainer: container)
     }
     
     override func tearDown() {
