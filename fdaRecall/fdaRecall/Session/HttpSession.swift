@@ -47,6 +47,9 @@ class HttpSession {
 
     private func execute<T>(httpMethod: String, parameters: [String: Any] = [:], headers: [String: String] = [:], body: Encodable? = nil) async -> Result<T, DataError> where T: Decodable {
         urlComponents.append(parameters: parameters)
+        
+        // add the apikey here
+        urlComponents.append(parameters: ["api_key": apiKey])
 
         guard let composedUrl = urlComponents.url else {
             return .failure(.urlIsInvalid)
@@ -107,8 +110,6 @@ class HttpSession {
         var headers = ["Content-Type": "application/json"]
         headers["Accept"] = "*/*"
         headers["Accept-Encoding"] = "gzip, deflate, br"
-        headers["Connection"] = "keep-alive"
-        headers["x-api-key"] = apiKey
 
         return headers
     }

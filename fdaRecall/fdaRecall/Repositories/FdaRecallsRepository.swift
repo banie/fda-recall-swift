@@ -33,7 +33,7 @@ class FdaRecallsRepositoryImpl: FdaRecallsRepository {
     }
     
     func fetch(page: Int = 0) async -> Result<FdaRecallsPage, DataError> {
-        guard let httpSession = HttpSession(apiKey: "", fullUrlPath: BASE_URL) else {
+        guard let httpSession = HttpSession(apiKey: API_KEY, fullUrlPath: BASE_URL) else {
             return .failure(.urlIsInvalid)
         }
         
