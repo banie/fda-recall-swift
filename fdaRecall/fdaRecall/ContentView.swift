@@ -69,6 +69,9 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("FDA Recalls")
+            .refreshable {
+                viewModel.refresh(clearPersistence: true)
+            }
         } detail: {
             Text("Select a recall")
         }

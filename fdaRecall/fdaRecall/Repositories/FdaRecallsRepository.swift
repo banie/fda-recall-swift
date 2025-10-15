@@ -12,6 +12,7 @@ import os.log
 protocol FdaRecallsRepository {
     var fetchLimit: Int { get }
     func fetch(page: Int) async -> Result<FdaRecallsPage, DataError>
+    func clearPersistence() async
 }
 
 struct FdaRecallsPage {
@@ -58,6 +59,18 @@ class FdaRecallsRepositoryImpl: FdaRecallsRepository {
             return .success(FdaRecallsPage(hasMoreData: hasMoreData, currentPage: page))
         case .failure(let error):
             return .failure(error)
+        }
+    }
+    
+    func clearPersistence() async {
+        let backgroundContext = ModelContext(modelContainer)
+
+        do {
+            try backgroundContext.delete(model: FdaRecallData.self)
+            try backgroundContext.save()
+            logger.info("Successfully cleared all FDA recall data from persistence")
+        } catch {
+            logger.error("Failed to clear persistence: \(error)")
         }
     }
 }

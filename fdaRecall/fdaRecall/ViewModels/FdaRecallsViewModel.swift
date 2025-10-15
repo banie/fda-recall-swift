@@ -22,12 +22,15 @@ class FdaRecallsViewModel: ObservableObject {
         self.repository = repository
     }
     
-    func refresh() {
+    func refresh(clearPersistence: Bool = false) {
         isLoading = true
         currentPage = 0
         hasMoreData = true
-        
+
         Task {
+            if clearPersistence {
+                await repository.clearPersistence()
+            }
             switch await repository.fetch(page: 0) {
             case .success(let page):
                 handleSuccess(page)
